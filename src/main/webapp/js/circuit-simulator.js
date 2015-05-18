@@ -1,46 +1,121 @@
 /**
  * Created by szmurlor on 18.05.15.
  */
+var CS = CS || {
+    components: [],
+    MM_ADD_RESISTOR: 1,
+    MM_SELECT: 2,
+    csMouseMode: this.MM_SELECT,
+    lastX: 0,
+    lastY: 0,
+    mmDown: false,
 
-var components = [];
+    init: function (id) {
+        var c =$('#' + id);
+        c.mousedown(function (e) {
+            x = e.pageX - this.offsetLeft;
+            y = e.pageY - this.offsetTop;
 
-var MM_ADD_RESISTOR = 1;
-var csMouseMode = MM_ADD_RESISTOR;
+            this.lastX = x;
+            this.lastY = y;
 
-$(document).ready( function() {
-   init('scheme');
-});
+            switch (CS.csMouseMode) {
+                case CS.MM_SELECT:
+                    CS.clearSelected();
+                    CS.select(x, y);
+                    break;
+                case CS.MM_ADD_RESISTOR:
+                    CS.addResistor(x, y);
+                    break;
+                default:
+                    break;
+            }
+            CS.repaint();
+            CS.mmDown = true;
+        });
 
-function init(id) {
-    $('#'+id).mousedown(function (e) {
-        x = e.pageX - this.offsetLeft;
-        y = e.pageY - this.offsetTop;
-        switch (csMouseMode) {
-            case MM_ADD_RESISTOR:
-                addResistor(x, y);
-                break;
-            default:
-                break;
+        c.mouseup(function (e) {
+            x = e.pageX - this.offsetLeft;
+            y = e.pageY - this.offsetTop;
+            switch (CS.csMouseMode) {
+                case CS.MM_ADD_RESISTOR:
+                    // CS.addResistor(x, y);
+                    break;
+            }
+            CS.mmDown = false;
+        });
+
+        c.mouseleave(function (e) {
+            CS.mmDown = false;
+        });
+
+        c.mousemove(function (e) {
+            x = e.pageX - this.offsetLeft;
+            y = e.pageY - this.offsetTop;
+            dx = x - this.lastX;
+            dy = y - this.lastY;
+
+            switch (CS.csMouseMode) {
+                case CS.MM_SELECT:
+                    if (CS.mmDown) {
+                        CS.moveSelectedBy(dx, dy);
+                        CS.repaint();
+                    }
+                    break;
+            }
+
+            this.lastX = x;
+            this.lastY = y;
+        });
+
+    },
+
+    addResistor: function (x,y) {
+        var c = new Resistor(x,y, "R1");
+        this.components.push(c);
+    },
+
+    repaint: function() {
+        var context = document.getElementById("scheme").getContext("2d");
+        context.lineJoin = "round";
+
+        context.clearRect(0,0, context.canvas.width, context.canvas.height);
+
+        for (var i=0; i< this.components.length; i++) {
+            c = this.components[i];
+            c.paint(context);
         }
-    });
-}
 
-function addResistor(x,y) {
-    var c = new Resistor(x,y, "R1");
-    components.push(c);
-    repaint();
-}
+    },
 
-function repaint() {
-    var context = document.getElementById("scheme").getContext("2d");
-    context.lineJoin = "round";
+    moveSelectedBy: function(dx,dy) {
+        this.components.forEach(function(it) {
+            if (it.selected) {
+                it.x = it.x + dx;
+                it.y = it.y + dy;
+            }
+        });
+    },
 
-    for (var i=0; i< components.length; i++) {
-        c = components[i];
-        c.paint(context);
+    select: function(x,y) {
+        this.components.forEach(function(it) {
+           if (it.isInside(x,y)) {
+               it.selected = true;
+           }
+        });
+    },
+    clearSelected: function() {
+        this.components.forEach(function(it) {
+            it.selected = false;
+        });
     }
 
-}
+};
+
+$(document).ready( function() {
+   CS.init('scheme');
+});
+
 
 var Terminal = function(dx,dy) {
     this.dx = dx;
@@ -50,8 +125,15 @@ var Terminal = function(dx,dy) {
 var ElectricalComponent = function(x,y,name) {
     this.x = x;
     this.y = y;
+    this.width = 20;
+    this.height = 10;
     this.name = name;
     this.terminals = [];
+    this.selected = false;
+};
+
+ElectricalComponent.prototype.isInside = function (x,y) {
+    return x >= (this.x-this.width) && x <= (this.x+this.width) && y >= (this.y-this.height) && y <= (this.y+this.height);
 };
 
 ElectricalComponent.prototype.paint = function (context) {
@@ -80,7 +162,14 @@ Resistor.prototype.constructor = Resistor;
 Resistor.prototype.paint = function(ctx) {
     ElectricalComponent.prototype.paint.call(this, ctx);
 
+    ctx.save();
     //ctx.beginPath();
+
+    if (this.selected)
+        ctx.strokeStyle = 'red';
+    else
+        ctx.strokeStyle = 'black';
+
     ctx.moveTo(this.x-15, this.y);
     ctx.lineTo(this.x-12, this.y+5);
     ctx.lineTo(this.x-9, this.y-5);
@@ -95,4 +184,5 @@ Resistor.prototype.paint = function(ctx) {
     //ctx.closePath();
     ctx.stroke();
 
+    ctx.restore();
 };

@@ -16,10 +16,43 @@
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
+	<script type="text/javascript">
+		function callSimulate(url) {
+			var wcall = Wicket.Ajax.ajax({
+				u: url,
+				ep: CS.components,
+				c: 'cmdSimulate1'
+			});
+		}
+
+		function callSimulateJson(url) {
+			$.ajax({
+				url: url,
+				type: 'post',
+				cache: false,
+				// data: JSON.stringify(ccbArry),
+				data: "{'nic': 'odpowiedz'}",
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				success: function(json) {
+					console.log(" reponse :"+ json);
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					console.log("error :"+XMLHttpRequest.responseText);
+				}
+			});
+		}
+	</script>
 </head>
 <body>
 <h1>Circuit simulator</h1>
 
+<p>
+	<a href="#" onclick="CS.csMouseMode = CS.MM_SELECT; CS.repaint();">Select</a>
+	<a href="#" onclick="CS.csMouseMode = CS.MM_ADD_RESISTOR; CS.repaint();">Resistor</a>
+	<a href="#" wicket:id="cmdSimulate">Simulate</a>
+	<a href="#" wicket:id="cmdSimulateJson">Simulate</a>
+</p>
 <canvas id="scheme" width="800" height="600"></canvas>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
