@@ -9,6 +9,7 @@
 
 	<!-- Bootstrap -->
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/circuit-simulator.css" rel="stylesheet">
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,16 +46,23 @@
 	</script>
 </head>
 <body>
-<h1>Circuit simulator</h1>
 
-<p>
-	<a href="#" onclick="CS.csMouseMode = CS.MM_SELECT; CS.repaint();">Select</a>
-	<a href="#" onclick="CS.csMouseMode = CS.MM_ADD_RESISTOR; CS.repaint();">Resistor</a>
-	<a href="#" wicket:id="cmdSimulate">Simulate</a>
-	<a href="#" wicket:id="cmdSimulateJson">Simulate</a>
-</p>
-<canvas id="scheme" width="800" height="600"></canvas>
-
+<div class="container">
+	<div class="row">
+		<h1>Circuit simulator</h1>
+	</div>
+	<div class="row">
+		<p>
+			<a href="#" onclick="CS.csMouseMode = CS.MM_SELECT; CS.repaint();">Select</a>
+			<a href="#" onclick="CS.csMouseMode = CS.MM_ADD_RESISTOR; CS.repaint();">Resistor</a>
+			<a href="#" wicket:id="cmdSimulate">Simulate</a>
+			<a href="#" wicket:id="cmdSimulateJson">Simulate</a>
+		</p>
+	</div>
+	<div class="row">
+		<canvas id="scheme" width="800" height="600"></canvas>
+	</div>
+</div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
