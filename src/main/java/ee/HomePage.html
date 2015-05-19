@@ -52,15 +52,32 @@
 		<h1>Circuit simulator</h1>
 	</div>
 	<div class="row">
-		<p>
-			<a href="#" onclick="CS.csMouseMode = CS.MM_SELECT; CS.repaint();">Select</a>
-			<a href="#" onclick="CS.csMouseMode = CS.MM_ADD_RESISTOR; CS.repaint();">Resistor</a>
-			<a href="#" wicket:id="cmdSimulate">Simulate</a>
-			<a href="#" wicket:id="cmdSimulateJson">Simulate</a>
-		</p>
-	</div>
-	<div class="row">
-		<canvas id="scheme" width="800" height="600"></canvas>
+		<div class="col-md-8">
+			<p>
+				<a href="#" onclick="CS.csMouseMode = CS.MM_SELECT; CS.repaint();">Select</a>
+				<a href="#" onclick="CS.csMouseMode = CS.MM_ADD_RESISTOR; CS.repaint();">Resistor</a>
+				<a href="#" wicket:id="cmdSimulate">Simulate</a>
+				<a href="#" wicket:id="cmdSimulateJson">Simulate</a>
+			</p>
+			<canvas id="scheme" width="700" height="600"></canvas>
+		</div>
+		<div class="col-md-4">
+			<address>
+				<strong>Politechnika Warszawska</strong><br>
+				ul. Koszykowa 75<br>
+				00-662 Warszawa<br>
+				<abbr title="Phone">Tel:</abbr> (22) 234 76 14
+			</address>
+
+			<address>
+				<strong>Robert Szmurło</strong><br>
+				<a href="mailto:#">robert.szmurlo@ee.pw.edu.pl.gov</a>
+			</address>
+
+			<h4>Instrukcja obsługi</h4>
+
+			<p>Proszę użyć przycisków Select, Resistor i simulate do stworzenia nowego schematu oraz wykonania symulacji.</p>
+		</div>
 	</div>
 </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
